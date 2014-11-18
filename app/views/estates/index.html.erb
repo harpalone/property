@@ -7,7 +7,7 @@
                 <div class="center_left_box">
                 
                 <div class='index_search'>
-                <%= render 'search'%>
+                 <%= render 'indexSearch'%> 
                 </div>
 
 
@@ -78,11 +78,7 @@
     <div class="column4">
 
 
-      <pagging>
-        
-     <pagging>   
-
-
+     
 
 
     <div class="show_property">    
@@ -161,12 +157,12 @@
 
  
     <% end %>
-<a href="#start_index" class="upArrow"><%= image_tag 'arrow-up.png', class:'upArrow'%></a>
 </div>
+ <%= will_paginate @estates, renderer: BootstrapPagination::Rails %>
 </div>
 
-
 </div>
+
 <script>    
   $(document).ready(function(){
   slider = $('.index_bxslider').bxSlider(

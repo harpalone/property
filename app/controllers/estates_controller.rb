@@ -5,14 +5,53 @@ class EstatesController < ApplicationController
   # GET /estates.json
   def index
     @page = 'index_page'
-    @estates = Estate.all
-    @back_url = session[:my_previous_url]
+#    @estates = Estate.paginate(:page => params[:page], :per_page => 4)
+
+
+
+
+#  binding.pry
+#  @page = params[:req_page]
+
+ 
+  @page = params[:req_page]
+    if params[:address].present?
+      @page = 'search'
+  puts    @ptype = params[:select]
+      results = Geocoder.search(params[:address])
+      if results[0].present?
+        puts @res_address = results[0].formatted_address;
+        @plat = params[:p_lat];
+        @plng = params[:p_lng]; 
+#        params[:welcome][:address]
+        mr = 10 ;
+        radius = mr*1000;
+        @estates =  Estate.within_radius(radius, @plat, @plng).order_by_distance(@plat, @plng).where(ptype:@ptype).paginate(:page => params[:page], :per_page => 4) unless @ptype == 'all_prop'
+        @estates =  Estate.within_radius(radius, @plat, @plng).order_by_distance(@plat, @plng).paginate(:page => params[:page], :per_page => 4) if @ptype == 'all_prop'
+        
+        if @estates.size > 1
+          puts @res = "#{@estates.size} results found in #{@res_address} "
+        else
+          puts @res = "#{@estates.size} result found in #{params[:address]} "
+        end
+      else
+        @estates = Estate.paginate(:page => params[:page], :per_page => 4)  
+      end
+    else
+        @estates = Estate.paginate(:page => params[:page], :per_page => 4)
+        @res ="please select valid city"
+    end
+
+
+
   end
+
+
 
   # GET /estates/1
   # GET /estates/1.json
-  def welcome
-      @page = 'welcome_page'
+  def home
+      @page = 'home_page'
       @rem_ip = remote_ipp
       puts @rem_ip
       puts @location = Geocoder.search("#{@rem_ip}")
@@ -29,13 +68,10 @@ class EstatesController < ApplicationController
       puts st.address
      end 
 
-
       @res = '';
       @back_url = session[:my_previous_url]
-
   end
  
-
   def search
   puts params
   @page = params[:req_page]
@@ -49,8 +85,8 @@ class EstatesController < ApplicationController
 #        params[:welcome][:address]
         mr = 10 ;
         radius = mr*1000;
-        @estates =  Estate.within_radius(radius, @plat, @plng).order_by_distance(@plat, @plng).where(ptype:@ptype) unless @ptype == 'all_prop'
-        @estates =  Estate.within_radius(radius, @plat, @plng).order_by_distance(@plat, @plng) if @ptype == 'all_prop'
+        @estates =  Estate.within_radius(radius, @plat, @plng).order_by_distance(@plat, @plng).where(ptype:@ptype).paginate(:page => params[:page], :per_page => 100) unless @ptype == 'all_prop'
+        @estates =  Estate.within_radius(radius, @plat, @plng).order_by_distance(@plat, @plng).paginate(:page => params[:page], :per_page => 100) if @ptype == 'all_prop'
         
         if @estates.size > 1
           puts @res = "#{@estates.size} results found in #{@res_address} "
@@ -60,25 +96,12 @@ class EstatesController < ApplicationController
       else
         @estates = Estate.all  
       end
-## test
-     @estates.each do |st| 
-      puts st.address
-     end 
-## test_end
-#       @estates = Estate.take(2)
-
     else
         @estates = Estate.all
         @res ="please select valid city"
     end
 
-    puts params[:req_page]+'request page .......'
-  if params[:req_page] == 'index_page'
-      render 'index'
-  
-  else
-    render 'welcome'
-  end
+    render 'home'
 
   end
 
@@ -92,10 +115,6 @@ class EstatesController < ApplicationController
   end
 
 
-  def home
-    @estates = current_user.estates
-    @back_url = session[:my_previous_url]
-  end
 
   # GET /estates/new
   def new

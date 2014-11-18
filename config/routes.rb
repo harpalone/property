@@ -1,13 +1,9 @@
 Rails.application.routes.draw do
-  resources :estates do
-    member do
-      get 'home'
-    end
-  end
+  resources :estates 
 
-  post 'welcome', to: 'estates#welcome'
+  post 'home', to: 'estates#home'
+
   post 'search', to: 'estates#search'
-  
 #  resources :pictures
 
   devise_for :users
@@ -15,7 +11,7 @@ Rails.application.routes.draw do
   # See how all your routes lay out with "rake routes".
 
   # You can have the root of your site routed with "root"
-  root 'estates#welcome'
+  root 'estates#home'
   post 'new_estate', to: 'estates#new'
   #post 'estates/new_estate', to: 'estates#new' 
   # Example of regular route:
