@@ -19,7 +19,7 @@ class EstatesController < ApplicationController
       if @location[0].present? && @location[0].latitude.present?
         mr = 20 ;
         radius = mr*1000;
-        @estates =  Estate.within_radius(@location[0].latitude,@location[0].longitude, radius)
+        @estates =  Estate.within_radius(radius,@location[0].latitude,@location[0].longitude).order_by_distance(@location[0].latitude,@location[0].longitude)
 
       else
         @estates = Estate.all  
@@ -49,8 +49,8 @@ class EstatesController < ApplicationController
 #        params[:welcome][:address]
         mr = 10 ;
         radius = mr*1000;
-        @estates =  Estate.within_radius(@plat, @plng, radius).where(ptype:@ptype) unless @ptype == 'all_prop'
-        @estates =  Estate.within_radius(@plat, @plng, radius) if @ptype == 'all_prop'
+        @estates =  Estate.within_radius(radius, @plat, @plng).order_by_distance(@plat, @plng).where(ptype:@ptype) unless @ptype == 'all_prop'
+        @estates =  Estate.within_radius(radius, @plat, @plng).order_by_distance(@plat, @plng) if @ptype == 'all_prop'
         
         if @estates.size > 1
           puts @res = "#{@estates.size} results found in #{@res_address} "

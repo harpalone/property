@@ -18,6 +18,7 @@ gem 'carrierwave'
 gem "mini_magick"
 gem 'devise'
 gem 'devise_invitable', '~> 1.3.4'
+gem 'activerecord-postgres-earthdistance'
 # Use jquery as the JavaScript library
 gem 'jquery-rails'
 gem "geocoder"
