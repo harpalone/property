@@ -39,7 +39,7 @@ class EstatesController < ApplicationController
       end
     else
         @estates = Estate.paginate(:page => params[:page], :per_page => 4)
-        @res ="please select valid city"
+        @res ="listing all property"
     end
 
 
