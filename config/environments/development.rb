@@ -40,7 +40,7 @@ ActionMailer::Base.smtp_settings = {
   :port                 => 587,  
   :domain               => "gmail.com",  
   :user_name            => "reasetdeal@gmail.com",  
-  :password             => "asdfjkl\;123",  
+  :password             => "********",  
   :authentication       => "plain"
   # :enable_starttls_auto => true # I don't have this, but it should work anyway 
 } 
